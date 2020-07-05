@@ -178,15 +178,16 @@
                 </li>
                 <li><a href="#五">五、AIA（授权信息访问）</a></li>
                 <li><a href="#六">六、SCT(证书透明度列表)</a></li>
+                <li><a href="#后记">后记</a></li>
             </ul>
         </div>
     </div>
     <div class="box">
         <div id="简介" class="box-header box-blue">简介</div>
         <div class="box-body">
-            <p>作者: 暗夜（QQ: <a href="http://wpa.qq.com/msgrd?uin=1444691679">1444691679</a>）</p>
-            <p>转码: 神林（Telegram: <a href="https://t.me/jyxjjj">@jyxjjj</a>）</p>
-            <p>修改时间: 2020/07/05</p>
+            作者: 暗夜（QQ: <a href="http://wpa.qq.com/msgrd?uin=1444691679">1444691679</a>）<br/>
+            转码: 神林（Telegram: <a href="https://t.me/jyxjjj">@jyxjjj</a>）<br/>
+            修改时间: 2020/07/05<br/>
             Copyright &copy; 2020<br/>
             OpenSSL交流群(201757544) All Rights Reserved.
             <div>
@@ -259,22 +260,33 @@
     <div class="box">
         <div id="二" class="box-header box-blue">二、CRL（证书吊销列表）</div>
         <div class="box-body">
-            <blockquote><h4>CRL全称为"证书吊销列表"，此项技术被微软推荐并且在Windows平台中其作为优先检查项。&lt;BR&gt;</h4>
-                <p>CRL通常为"专用"的，即各级CA有各级CA的证书吊销列表，且该CA签发的下级证书必须包含名为"CRL 分发点"的证书扩展属性，此外该属性的值必须指向可以正常访问的地址，包括域名或IP地址，此外地址必须精准指向该证书吊销列表文件。例如: </p><h5>http://www.example.com/abc.crl</h5><h5>
-                    http://123.123.123.123/abc.crl</h5>
-                <p>需要注意的是该地址前必须包含使用的协议，例如HTTP、HTTPS、FTP、Idap等。
-                    如果想要在签发的证书中包含该扩展，可以在配置文件中这样写: &lt;BR&gt;
-                    <code>crlDistributionPoints = URI:http://www.example.com/abc.crl</code>&lt;BR&gt;
-                    其中"crlDistributionPoints"表示该扩展为CRL分发点扩展，"URI"表示后面的地址为该文件的准确位置。例如上述中地址写的是<code>"http://www.example.com/abc.crl"</code>，那么系统会精确的按照<code>"http://www.example.com/abc.crl"</code>这个地址获取证书吊销列表文件。同样，一个证书可以有多个CRL地址（即多个证书吊销列表文件）。由于一个证书吊销列表文件的大小会随着被吊销的证书越来越多而越来越大，因此许多CA都选择通过发布多个CRL文件来缓解系统获取每个吊销列表文件时的压力。可以通过在配置文件中这样写来指定多个CRL文件:
-                    <code>crlDistributionPoints.0 = URI:http://www.example.com/abc1.crl</code>&lt;BR&gt;
-                    <code>crlDistributionPoints.1 = URI:http://www.example.com/abc2.crl</code>&lt;BR&gt;</p></blockquote>
-            <p>当然，仅将CRL的扩展包含到证书证书中是不够的，CA还需要生成CRL文件并发布它。可以通过在OpenSSL.exe中执行如下命令来生成一个CRL列表。&lt;BR&gt;
-                <code>ca -gencrl -crldays 有效期（日） -cert CA证书.crt -keyfile CA证书私钥.key -md 算法（SHA*、MD*等） -out 输出文件.crl -config 配置文件.cnf</code>&lt;BR&gt;
-                Tips:&lt;BR&gt;
-                "-crldays"可以被"-crlhour"替代，替代后的有效期单位则为小时。不推荐将有效期设置的太短，一周足够。否则CA需要频繁的生成、发布最新的CRL文件。&lt;BR&gt;
-                算法可以为"SHA1"、"SHA256"、"SHA384"、"SHA512"、"MD1"、"MD2"、"MD5"等等，有效即可。同时选择算法时也应考虑操作系统兼容性。</p>
-
-            <p>至此，CRL的教程到此结束。</p>
+            <h4>CRL全称为"证书吊销列表"，此项技术被微软推荐并且在Windows平台中其作为优先检查项。</h4>
+            CRL通常为"专用"的，即各级CA有各级CA的证书吊销列表<br/>
+            且该CA签发的下级证书必须包含名为"CRL 分发点"的证书扩展属性<br/>
+            该属性的值必须指向可以正常访问的地址，包括域名或IP地址<br/>
+            地址必须精准指向该证书吊销列表文件
+            例如: <br/>
+            <code>http://www.example.com/abc.crl</code><br/>
+            <code>http://123.123.123.123/abc.crl</code><br/>
+            需要注意的是该地址前必须包含使用的协议，例如HTTP、HTTPS、FTP、LDAP等。<br/>
+            如果想要在签发的证书中包含该扩展，可以在配置文件中这样写:<br/>
+            <code>crlDistributionPoints = URI:http://www.example.com/abc.crl</code><br/>
+            其中"crlDistributionPoints"表示该扩展为CRL分发点扩展，"URI"表示后面的地址为该文件的准确位置。<br/>
+            例如上述中地址写的是<br/>
+            <code>"http://www.example.com/abc.crl"</code><br/>
+            那么系统会精确的按照<br/>
+            <code>"http://www.example.com/abc.crl"</code><br/>
+            这个地址获取证书吊销列表文件。同样，一个证书可以有多个CRL地址（即多个证书吊销列表文件）<br/>
+            由于一个证书吊销列表文件的大小会随着被吊销的证书越来越多而越来越大，因此许多CA都选择通过发布多个CRL文件来缓解系统获取每个吊销列表文件时的压力。<br/>
+            可以通过在配置文件中这样写来指定多个CRL文件:<br/>
+            <code>crlDistributionPoints.0 = URI:http://www.example.com/abc1.crl</code><br/>
+            <code>crlDistributionPoints.1 = URI:http://www.example.com/abc2.crl</code><br/>
+            当然，仅将CRL的扩展包含到证书证书中是不够的，CA还需要生成CRL文件并发布它。<br/>
+            可以通过在OpenSSL.exe中执行如下命令来生成一个CRL列表。<br/>
+            <code>ca -gencrl -crldays 有效期（日） -cert CA证书.crt -keyfile CA证书私钥.key -md 算法（SHA*、MD*等） -out 输出文件.crl -config 配置文件.cnf</code><br/>
+            Tips:<br/>
+            "-crldays"可以被"-crlhour"替代，替代后的有效期单位则为小时。不推荐将有效期设置的太短，一周足够。否则CA需要频繁的生成、发布最新的CRL文件。<br/>
+            算法可以为"SHA1"、"SHA256"、"SHA384"、"SHA512"、"MD1"、"MD2"、"MD5"等等，有效即可。同时选择算法时也应考虑操作系统兼容性。<br/>
         </div>
     </div>
     <div class="box">
