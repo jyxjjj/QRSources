@@ -37,6 +37,10 @@
         }
 
         a:link, a:hover, a:focus, a:active, a:visited {
+            color: #444444;
+        }
+
+        .box-body > a:link, .box-body > a:hover, .box-body > a:focus, .box-body > a:active, .box-body > a:visited {
             color: #48AEE2;
         }
 
@@ -173,6 +177,7 @@
                     </ul>
                 </li>
                 <li><a href="#五">五、AIA（授权信息访问）</a></li>
+                <li><a href="#六">六、SCT(证书透明度列表)</a></li>
             </ul>
         </div>
     </div>
@@ -252,124 +257,114 @@
         </div>
     </div>
     <div class="box">
-        <div id="二" class="box-header box-blue"></div>
+        <div id="二" class="box-header box-blue">二、CRL（证书吊销列表）</div>
         <div class="box-body">
+            <blockquote><h4>CRL全称为"证书吊销列表"，此项技术被微软推荐并且在Windows平台中其作为优先检查项。&lt;BR&gt;</h4>
+                <p>CRL通常为"专用"的，即各级CA有各级CA的证书吊销列表，且该CA签发的下级证书必须包含名为"CRL 分发点"的证书扩展属性，此外该属性的值必须指向可以正常访问的地址，包括域名或IP地址，此外地址必须精准指向该证书吊销列表文件。例如: </p><h5>http://www.example.com/abc.crl</h5><h5>
+                    http://123.123.123.123/abc.crl</h5>
+                <p>需要注意的是该地址前必须包含使用的协议，例如HTTP、HTTPS、FTP、Idap等。
+                    如果想要在签发的证书中包含该扩展，可以在配置文件中这样写: &lt;BR&gt;
+                    <code>crlDistributionPoints = URI:http://www.example.com/abc.crl</code>&lt;BR&gt;
+                    其中"crlDistributionPoints"表示该扩展为CRL分发点扩展，"URI"表示后面的地址为该文件的准确位置。例如上述中地址写的是<code>"http://www.example.com/abc.crl"</code>，那么系统会精确的按照<code>"http://www.example.com/abc.crl"</code>这个地址获取证书吊销列表文件。同样，一个证书可以有多个CRL地址（即多个证书吊销列表文件）。由于一个证书吊销列表文件的大小会随着被吊销的证书越来越多而越来越大，因此许多CA都选择通过发布多个CRL文件来缓解系统获取每个吊销列表文件时的压力。可以通过在配置文件中这样写来指定多个CRL文件:
+                    <code>crlDistributionPoints.0 = URI:http://www.example.com/abc1.crl</code>&lt;BR&gt;
+                    <code>crlDistributionPoints.1 = URI:http://www.example.com/abc2.crl</code>&lt;BR&gt;</p></blockquote>
+            <p>当然，仅将CRL的扩展包含到证书证书中是不够的，CA还需要生成CRL文件并发布它。可以通过在OpenSSL.exe中执行如下命令来生成一个CRL列表。&lt;BR&gt;
+                <code>ca -gencrl -crldays 有效期（日） -cert CA证书.crt -keyfile CA证书私钥.key -md 算法（SHA*、MD*等） -out 输出文件.crl -config 配置文件.cnf</code>&lt;BR&gt;
+                Tips:&lt;BR&gt;
+                "-crldays"可以被"-crlhour"替代，替代后的有效期单位则为小时。不推荐将有效期设置的太短，一周足够。否则CA需要频繁的生成、发布最新的CRL文件。&lt;BR&gt;
+                算法可以为"SHA1"、"SHA256"、"SHA384"、"SHA512"、"MD1"、"MD2"、"MD5"等等，有效即可。同时选择算法时也应考虑操作系统兼容性。</p>
+
+            <p>至此，CRL的教程到此结束。</p>
         </div>
     </div>
     <div class="box">
-        <div id="三" class="box-header box-blue"></div>
+        <div id="三" class="box-header box-blue">三、CAI（证书颁发机构颁发者）</div>
         <div class="box-body">
+            <h4>CAI全称为"证书颁发机构颁发者"，它会告知操作系统当证书链不全或错误、无效的时候，从哪里可以正确的获取到该证书正确的颁发者（签发证书）。当证书链不全或错误、无效时，而CAI配置错误或不存在、无法正常访问、获取文件，那么Windows就会提示警告。</h4><h4>
+            可能你会疑惑为什么你直接查看你的CA颁发的证书会显示"Windows缺少某些信息，无法验证该证书的颁发者。"错误，但是大厂却不会？而为什么在安装好各级CA后却又正常了呢？</h4><h4>由于CAI和OCSP会统一保存、生效在AIA扩展中，因此下文仅作概述。详述请查看AIA章节，但AIA章节不包含此章节和OCSP章节的内容！&lt;BR&gt;</h4>
+            <p>CAI中指定的地址可以向系统提供一个查找该证书签发者的位置。
+                比如在一个四级CA体系中:
+                - ### Root CA
+                - ### Class 2 CA
+                - ### Class 3 CA (Thrid Party)
+                - ### Entity Certification&lt;BR&gt;
+                通常操作系统仅会安装根CA，那么在该操作系统中查看最终实体证书时会因为缺少二级和三级CA而无法验证。而CAI会解决这个问题。
+                当系统中没有安装二级、三级CA时，Windows会查找最终实体证书的AIA扩展中的CAI，并根据CAI地址获取签发者（签发证书）。成功获取后由于仍缺少二级CA，所以Windows会查找三级CA证书的AIA扩展中的CAI，并根据CAI地址获取签发者（签发证书）。在成功获取后Windows会自动安装该证书的上级证书（即签发证书），同时验证整条证书链。&lt;BR&gt;
+                由此可见，CAI在整条证书链和公钥基础设施中的重要性。</p>
         </div>
     </div>
     <div class="box">
-        <div id="四" class="box-header box-blue"></div>
+        <div id="四" class="box-header box-blue">四、OCSP（联机证书状态协议）</div>
         <div class="box-body">
+            <blockquote><h4>OCSP全称为"联机证书状态协议"，它会告知操作系统或应用程序当前证书的状态是否正常（或吊销）。由于CRL的局限性和缺点，谷歌推荐这项技术，但微软对此技术并不支持。</h4><h4>由于CAI和OCSP会统一保存、生效在AIA扩展中，因此下文仅作概述。详述请查看AIA章节，但AIA章节不包含此章节和CRL章节的内容！</h4>
+                <h3><strong>请注意！此章节与CRL章节不同！此章节包含OCSP实现的重要方法和技术细节！请您务必仔细阅读！</strong>&lt;BR&gt;</h3>
+                <p>
+                    OCSP作为被以谷歌为推广代表，谷歌浏览器为应用代表广泛"传播"的技术，其在很大程度上发挥了便捷、安全、准确、快速的功能和效果。OCSP在证书链、PKI体系中，承担了很重要的角色。同CRL一样，它也在证书状态检查方面发挥了重要的作用。与CRL不同的是，你只需要指定一个OCSP响应器地址，不需要发布任何文件等，OCSP响应器即可完成所有工作并返回结果。与CRL相同的是，OCSP也是"专用"的，即每个CA有每个CA的OCSP响应器。但其在技术实现和细节方面与CRL有较大差别:
+                    &lt;BR&gt;
+                    1. 需要专用的OCSP证书来对发送的内容和传输过程进行加密；
+                    2. OCSP返回的结果几乎为实时响应，除非进行设置，否则返回结果的有效期为实时；
+                    3. OCSP响应器收到请求后会自动完成一系列操作，无需手动发布响应结果等类的文件。&lt;BR&gt;</p><h4>
+                    需要注意的是，在Windows操作系统中，系统默认优先检查CRL。比如在同时有有效CRL和OCSP地址的代码签名证书中，我们查看使用该证书签名程序的签名状态，Windows会首先获取CRL，其次是OCSP响应结果。&lt;BR&gt;</h4></blockquote>
+
+            <h3><strong>OCSP响应器</strong></h3>
+
+            <p>要实现OCSP，您需要启动一个OCSP响应服务器。OpenSSL中带有这样的功能。通过在OpenSSL中执行如下命令，您便可以启动一个OCSP响应服务器。&lt;BR&gt;
+                但是请注意！您运行OCSP相应服务器的地址、端口必须与证书中设置的端口一致，否则系统无法检查OCSP响应结果！&lt;BR&gt;
+                <code>ocsp -index demoCA/index.txt -port 8080 -nmin 1 -rsigner oc.crt -rkey oc.key -CA CA的证书文件.crt -out 日志文件.log</code>&lt;BR&gt;
+                上述命令中，-index 指定该CA的数据库文件位置（CA的数据库可以被多个CA使用，比如OpenSSL中所有签发的证书都被记录在index.txt文件），-port 指定运行的端口（可以从哪个端口获取到OCSP响应信息），-nmin 指定一个响应结果的有效期（分钟），-rsigner 指定加密（签发）响应结果的证书文件，-rkey 则为该证书的私钥文件，-CA
+                指定该OCSP响应器的CA，-out 指定OCSP响应器输出的日志文件。</p>
+
+            <h3><strong>OCSP专用证书</strong></h3>
+
+            <p><strong>加密OCSP响应的证书必须为专用的证书！</strong>&lt;BR&gt;
+                该证书可以由根CA签发，由此来对该CA签发的所有CA的所有OCSP响应器通用。
+                由于OCSP响应证书不能包含AIA（授权信息访问），CRL分发点扩展。并且AIA扩展中还包括CAI和OCSP，所以CA无法控制OCSP证书。因此该证书的有效期必须控制在半年以内。</p>
+
+            <h4>证书扩展: </h4>
+
+            <p>OCSP专用证书必须有"OCSP不撤销检查"扩展，密钥用法仅可以包含: &lt;BR&gt;
+                <code>Digital Signature, Non-Repudiation, Key Encipherment</code>&lt;BR&gt;
+                增强型密钥用法扩展必须仅包含<code>"OCSP 签名"</code>用法，此外证书也必须为最终实体证书。
+                某些情况下，为了使Windows系统兼容，此证书还必须包含"应用程序策略"扩展，策略标识符为"OCSP 签名"。</p>
+
         </div>
     </div>
     <div class="box">
-        <div id="五" class="box-header box-blue"></div>
+        <div id="五" class="box-header box-blue">五、AIA（授权信息访问）</div>
         <div class="box-body">
+            <blockquote>
+                <h4>AIA全称为"授权信息访问"，这是一个非常重要的扩展。AIA可以向系统提供该证书的CAI和OCSP地址，从而让系统验证该证书的证书链、有效性。</h4>
+                <p>为了使该证书有有效的CAI和OCSP地址，您可以在配置文件中这样写:
+                    <code>authorityInfoAccess = OCSP;URI:http://www.example.com:8080,caIssuers;URI:http://www.example.com/abc.crt</code>
+                    其中"authorityInfoAccess"表示该扩展为"授权信息访问"扩展，"OCSP"表示后面的URI地址为可以请求该证书有效性的OCSP响应信息的地址。"caIssuers"表示后面的URI地址为该证书颁发者证书的位置。
+                </p>
+            </blockquote>
         </div>
     </div>
-    <h2>二、CRL（证书吊销列表）</h2>
-    <blockquote><h4>CRL全称为"证书吊销列表"，此项技术被微软推荐并且在Windows平台中其作为优先检查项。&lt;BR&gt;</h4>
-        <p>CRL通常为"专用"的，即各级CA有各级CA的证书吊销列表，且该CA签发的下级证书必须包含名为"CRL 分发点"的证书扩展属性，此外该属性的值必须指向可以正常访问的地址，包括域名或IP地址，此外地址必须精准指向该证书吊销列表文件。例如: </p><h5>http://www.example.com/abc.crl</h5><h5>
-            http://123.123.123.123/abc.crl</h5>
-        <p>需要注意的是该地址前必须包含使用的协议，例如HTTP、HTTPS、FTP、Idap等。
-            如果想要在签发的证书中包含该扩展，可以在配置文件中这样写: &lt;BR&gt;
-            <code>crlDistributionPoints = URI:http://www.example.com/abc.crl</code>&lt;BR&gt;
-            其中"crlDistributionPoints"表示该扩展为CRL分发点扩展，"URI"表示后面的地址为该文件的准确位置。例如上述中地址写的是<code>"http://www.example.com/abc.crl"</code>，那么系统会精确的按照<code>"http://www.example.com/abc.crl"</code>这个地址获取证书吊销列表文件。同样，一个证书可以有多个CRL地址（即多个证书吊销列表文件）。由于一个证书吊销列表文件的大小会随着被吊销的证书越来越多而越来越大，因此许多CA都选择通过发布多个CRL文件来缓解系统获取每个吊销列表文件时的压力。可以通过在配置文件中这样写来指定多个CRL文件:
-            <code>crlDistributionPoints.0 = URI:http://www.example.com/abc1.crl</code>&lt;BR&gt;
-            <code>crlDistributionPoints.1 = URI:http://www.example.com/abc2.crl</code>&lt;BR&gt;</p></blockquote>
-    <p>当然，仅将CRL的扩展包含到证书证书中是不够的，CA还需要生成CRL文件并发布它。可以通过在OpenSSL.exe中执行如下命令来生成一个CRL列表。&lt;BR&gt;
-        <code>ca -gencrl -crldays 有效期（日） -cert CA证书.crt -keyfile CA证书私钥.key -md 算法（SHA*、MD*等） -out 输出文件.crl -config 配置文件.cnf</code>&lt;BR&gt;
-        Tips:&lt;BR&gt;
-        "-crldays"可以被"-crlhour"替代，替代后的有效期单位则为小时。不推荐将有效期设置的太短，一周足够。否则CA需要频繁的生成、发布最新的CRL文件。&lt;BR&gt;
-        算法可以为"SHA1"、"SHA256"、"SHA384"、"SHA512"、"MD1"、"MD2"、"MD5"等等，有效即可。同时选择算法时也应考虑操作系统兼容性。</p>
 
-    <p>至此，CRL的教程到此结束。</p>
-
-    <hr/>
-
-    <h2>三、CAI（证书颁发机构颁发者）</h2>
-
-    <blockquote><h4>CAI全称为"证书颁发机构颁发者"，它会告知操作系统当证书链不全或错误、无效的时候，从哪里可以正确的获取到该证书正确的颁发者（签发证书）。当证书链不全或错误、无效时，而CAI配置错误或不存在、无法正常访问、获取文件，那么Windows就会提示警告。</h4><h4>
-        可能你会疑惑为什么你直接查看你的CA颁发的证书会显示"Windows缺少某些信息，无法验证该证书的颁发者。"错误，但是大厂却不会？而为什么在安装好各级CA后却又正常了呢？</h4><h4>由于CAI和OCSP会统一保存、生效在AIA扩展中，因此下文仅作概述。详述请查看AIA章节，但AIA章节不包含此章节和OCSP章节的内容！&lt;BR&gt;</h4>
-        <p>CAI中指定的地址可以向系统提供一个查找该证书签发者的位置。
-            比如在一个四级CA体系中:
-            - ### Root CA
-            - ### Class 2 CA
-            - ### Class 3 CA (Thrid Party)
-            - ### Entity Certification&lt;BR&gt;
-            通常操作系统仅会安装根CA，那么在该操作系统中查看最终实体证书时会因为缺少二级和三级CA而无法验证。而CAI会解决这个问题。
-            当系统中没有安装二级、三级CA时，Windows会查找最终实体证书的AIA扩展中的CAI，并根据CAI地址获取签发者（签发证书）。成功获取后由于仍缺少二级CA，所以Windows会查找三级CA证书的AIA扩展中的CAI，并根据CAI地址获取签发者（签发证书）。在成功获取后Windows会自动安装该证书的上级证书（即签发证书），同时验证整条证书链。&lt;BR&gt;
-            由此可见，CAI在整条证书链和公钥基础设施中的重要性。</p></blockquote>
-
-    <hr/>
-
-    <h2>四、OCSP（联机证书状态协议）</h2>
-
-    <blockquote><h4>OCSP全称为"联机证书状态协议"，它会告知操作系统或应用程序当前证书的状态是否正常（或吊销）。由于CRL的局限性和缺点，谷歌推荐这项技术，但微软对此技术并不支持。</h4><h4>由于CAI和OCSP会统一保存、生效在AIA扩展中，因此下文仅作概述。详述请查看AIA章节，但AIA章节不包含此章节和CRL章节的内容！</h4>
-        <h3><strong>请注意！此章节与CRL章节不同！此章节包含OCSP实现的重要方法和技术细节！请您务必仔细阅读！</strong>&lt;BR&gt;</h3>
-        <p>
-            OCSP作为被以谷歌为推广代表，谷歌浏览器为应用代表广泛"传播"的技术，其在很大程度上发挥了便捷、安全、准确、快速的功能和效果。OCSP在证书链、PKI体系中，承担了很重要的角色。同CRL一样，它也在证书状态检查方面发挥了重要的作用。与CRL不同的是，你只需要指定一个OCSP响应器地址，不需要发布任何文件等，OCSP响应器即可完成所有工作并返回结果。与CRL相同的是，OCSP也是"专用"的，即每个CA有每个CA的OCSP响应器。但其在技术实现和细节方面与CRL有较大差别:
-            &lt;BR&gt;
-            1. 需要专用的OCSP证书来对发送的内容和传输过程进行加密；
-            2. OCSP返回的结果几乎为实时响应，除非进行设置，否则返回结果的有效期为实时；
-            3. OCSP响应器收到请求后会自动完成一系列操作，无需手动发布响应结果等类的文件。&lt;BR&gt;</p><h4>
-            需要注意的是，在Windows操作系统中，系统默认优先检查CRL。比如在同时有有效CRL和OCSP地址的代码签名证书中，我们查看使用该证书签名程序的签名状态，Windows会首先获取CRL，其次是OCSP响应结果。&lt;BR&gt;</h4></blockquote>
-
-    <h3><strong>OCSP响应器</strong></h3>
-
-    <p>要实现OCSP，您需要启动一个OCSP响应服务器。OpenSSL中带有这样的功能。通过在OpenSSL中执行如下命令，您便可以启动一个OCSP响应服务器。&lt;BR&gt;
-        但是请注意！您运行OCSP相应服务器的地址、端口必须与证书中设置的端口一致，否则系统无法检查OCSP响应结果！&lt;BR&gt;
-        <code>ocsp -index demoCA/index.txt -port 8080 -nmin 1 -rsigner oc.crt -rkey oc.key -CA CA的证书文件.crt -out 日志文件.log</code>&lt;BR&gt;
-        上述命令中，-index 指定该CA的数据库文件位置（CA的数据库可以被多个CA使用，比如OpenSSL中所有签发的证书都被记录在index.txt文件），-port 指定运行的端口（可以从哪个端口获取到OCSP响应信息），-nmin 指定一个响应结果的有效期（分钟），-rsigner 指定加密（签发）响应结果的证书文件，-rkey 则为该证书的私钥文件，-CA
-        指定该OCSP响应器的CA，-out 指定OCSP响应器输出的日志文件。</p>
-
-    <h3><strong>OCSP专用证书</strong></h3>
-
-    <p><strong>加密OCSP响应的证书必须为专用的证书！</strong>&lt;BR&gt;
-        该证书可以由根CA签发，由此来对该CA签发的所有CA的所有OCSP响应器通用。
-        由于OCSP响应证书不能包含AIA（授权信息访问），CRL分发点扩展。并且AIA扩展中还包括CAI和OCSP，所以CA无法控制OCSP证书。因此该证书的有效期必须控制在半年以内。</p>
-
-    <h4>证书扩展: </h4>
-
-    <p>OCSP专用证书必须有"OCSP不撤销检查"扩展，密钥用法仅可以包含: &lt;BR&gt;
-        <code>Digital Signature, Non-Repudiation, Key Encipherment</code>&lt;BR&gt;
-        增强型密钥用法扩展必须仅包含<code>"OCSP 签名"</code>用法，此外证书也必须为最终实体证书。
-        某些情况下，为了使Windows系统兼容，此证书还必须包含"应用程序策略"扩展，策略标识符为"OCSP 签名"。</p>
-
-    <hr/>
-
-    <h2>五、AIA（授权信息访问）</h2>
-
-    <blockquote>
-        <h4>AIA全称为"授权信息访问"，这是一个非常重要的扩展。AIA可以向系统提供该证书的CAI和OCSP地址，从而让系统验证该证书的证书链、有效性。</h4>
-        <p>为了使该证书有有效的CAI和OCSP地址，您可以在配置文件中这样写:
-            <code>authorityInfoAccess = OCSP;URI:http://www.example.com:8080,caIssuers;URI:http://www.example.com/abc.crt</code>
-            其中"authorityInfoAccess"表示该扩展为"授权信息访问"扩展，"OCSP"表示后面的URI地址为可以请求该证书有效性的OCSP响应信息的地址。"caIssuers"表示后面的URI地址为该证书颁发者证书的位置。
-        </p>
-    </blockquote>
-
-    <hr/>
-
-    <h2>六、SCT（证书透明度列表）</h2>
-    <blockquote>
-        <h4>SCT又称"CT"或"CTL"，意为"证书透明度日志"或"证书透明度列表"，它是一项由谷歌力推的技术。该技术的出现是为了防止一些CA由于内部目的随意签发域名的证书，因此从2016年开始，所有的SSL证书必须包含有效的CT记录。</h4>
-        <p>相信很多人试图将自己签发的证书提交到谷歌、DigiCert等大厂的CT日志服务器都会返回"无法将该证书验证到受信任的颁发机构"或者"该证书不被信任"的错误。由此可见，除非提交由受信任的根CA签发的SSL证书，否则大厂是拒绝签发SCT文件的。&lt;BR&gt;
-            因此我们也只能自建CT服务器。同样谷歌也提供了应用程序。由于过程十分繁琐，本人也没有条件实际测试，这里就不多赘述了。</p>
-    </blockquote>
-    <p>目前仅Chrome浏览器要求SSL证书必须有有效的CT日志记录，其他浏览器暂无影响。并且所有EV SSL证书必须有有效的CT日志记录，即有效的SCT列表扩展。否则不能实现浏览器地址栏"变绿"的效果。</p>
-    <hr/>
-    <h2>后记</h2>
-    <div>
-        至此本篇教程到此结束了，如果喜欢我的教程还请多多支持！
-        如有错误、表述不清欢迎反馈！
-        反馈方式:
-        邮箱: 1444691679@qq.com
-        主题: 反馈
-        这篇教程会不定期更新，我也会在这篇教程中及时分享，还请多多关注。
+    <div class="box">
+        <div id="六" class="box-header box-blue">六、SCT（证书透明度列表）</div>
+        <div class="box-body">
+            <blockquote>
+                <h4>SCT又称"CT"或"CTL"，意为"证书透明度日志"或"证书透明度列表"，它是一项由谷歌力推的技术。该技术的出现是为了防止一些CA由于内部目的随意签发域名的证书，因此从2016年开始，所有的SSL证书必须包含有效的CT记录。</h4>
+                <p>相信很多人试图将自己签发的证书提交到谷歌、DigiCert等大厂的CT日志服务器都会返回"无法将该证书验证到受信任的颁发机构"或者"该证书不被信任"的错误。由此可见，除非提交由受信任的根CA签发的SSL证书，否则大厂是拒绝签发SCT文件的。&lt;BR&gt;
+                    因此我们也只能自建CT服务器。同样谷歌也提供了应用程序。由于过程十分繁琐，本人也没有条件实际测试，这里就不多赘述了。</p>
+            </blockquote>
+            <p>目前仅Chrome浏览器要求SSL证书必须有有效的CT日志记录，其他浏览器暂无影响。并且所有EV SSL证书必须有有效的CT日志记录，即有效的SCT列表扩展。否则不能实现浏览器地址栏"变绿"的效果。</p>
+        </div>
+    </div>
+    <div class="box">
+        <div id="后记" class="box-header box-blue">后记</div>
+        <div class="box-body">
+            <div>
+                至此本篇教程到此结束了，如果喜欢我的教程还请多多支持！
+                如有错误、表述不清欢迎反馈！
+                反馈方式:
+                邮箱: 1444691679@qq.com
+                主题: 反馈
+                这篇教程会不定期更新，我也会在这篇教程中及时分享，还请多多关注。
+            </div>
+        </div>
     </div>
 </div>
 <div class="footer">
