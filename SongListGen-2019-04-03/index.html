@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>歌单图生成</title>
+	<style>
+		body {
+			width: 1024px;
+			height: 800px;
+			background-color: #000000;
+		}
+
+		.pic {
+			width: 700px;
+			height: 700px;
+			background-color: #FFFFFF;
+		}
+	</style>
+</head>
+<body>
+<div style="display: none;">
+	<img id="background" src="background.jpg" crossOrigin="anonymous">
+	<canvas id="All" class="pic" width="550" height="550"></canvas>
+</div>
+<div style="background-color: #FFFFFF">
+	名字：<input type="text" id="name" value="">
+	<br/>
+	<br/>
+	歌单：
+	<textarea id="main1" style="width:280px; height: 200px;"></textarea>
+	<br/>
+	<br/>
+	<button type="button" onclick="ok();">OK</button>
+	<br/>
+	<br/>
+	<img id="result" src="">
+</div>
+<script src="https://www.desmg.com/resources/jquery/js/jquery.min.js"></script>
+<script>
+	function ok() {
+		let canvas1 = $('#All')[0];
+		let ctx = canvas1.getContext('2d');
+		ctx.drawImage($('#background')[0], 0, 0);
+		ctx.fillStyle = "#000000";
+		ctx.font = "normal bold 48px 宋体";
+		ctx.fillText($('#name').val(), 80, 80);
+		ctx.font = "normal normal 22px 宋体";
+		let text = $('#main1').val();
+		text = text.split('\n');
+		text.forEach(function (cv, i) {
+			ctx.fillText(text[i], 80, 26 * i + 120);
+		});
+		$('#result').attr('src', canvas1.toDataURL('image/png'));
+	}
+</script>
+</body>
+</html>
