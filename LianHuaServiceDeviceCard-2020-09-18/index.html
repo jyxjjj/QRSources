@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>莲花物业设备卡生成</title>
+	<style>
+		html, body {
+			width: 1400px;
+            margin: 0px;
+			background-color: #000000;
+		}
+
+		.pic {
+			width: 887px;
+			height: 498px;
+			background-color: #FFFFFF;
+		}
+        
+        div {
+            margin: 0 auto auto auto;
+            padding: 0;
+            display: inline-block;
+        }
+        
+        img, canvas {
+            display: flex;
+        }
+        
+        hr {
+            border-color: #000000;
+            border-width: 2px;
+        }
+	</style>
+</head>
+<body>
+<div style="background-color: #FFFFFF;float: left;">
+	设备名称：<input type="text" id="name1" value="电梯">
+	<br/>
+	规格型号：<input type="text" id="name2" value="E-">
+	<br/>
+	主要性能技术参数：<input type="file" id="name3" value="">
+	<br/>
+	电脑资料号：<input type="text" id="name4" value="DT-L5">
+	<br/>
+	生产厂家：<input type="text" id="name5" value="上海蒂森">
+	<br/>
+	使用日期：<input type="text" id="name6" value="2020.01.08">
+	<br/>
+	巡检部门：<input type="text" id="name7" value="工程部">
+	<br/>
+	巡检负责人：<input type="text" id="name8" value="汪建春">
+	<br/>
+	保养部门：<input type="text" id="name9" value="上海蒂森电梯有限公司">
+	<br/>
+	保养责任人：<input type="text" id="name10" value="">
+	<br/>
+	设备名称字体大小：<input type="text" id="size1" value="25">
+	<br/>
+	规格型号字体大小：<input type="text" id="size2" value="25">
+	<br/>
+	保养部门字体大小：<input type="text" id="size3" value="25">
+	<br/>
+	<button type="button" onclick="ok();">OK</button>
+	<br/>
+</div>
+<div style="background-color: #FFFFFF;margin-left: 10px;">
+	结果图：<img id="result" src="">
+	<br/>
+    <hr/>
+	处理过程：<canvas id="All" class="pic" width="887" height="498"></canvas>
+	<br/>
+    <hr/>
+    二维码：<img id="qr">
+	<br/>
+    <hr/>
+    原图：<img id="background" src="background.png" crossOrigin="anonymous">
+	<br/>
+</div>
+<script src="https://www.desmg.com/resources/jquery/js/jquery.min.js"></script>
+<script>
+    $('#name3').on('change', () => {
+        var fileqr = $('#name3')[0].files[0];
+        console.log(fileqr);
+        var reader = new FileReader();
+        var url = URL.createObjectURL(fileqr);
+        console.log(url);
+        $('#qr').attr('src', url);
+    });
+    function ok() {
+		let canvas1 = $('#All')[0];
+		let ctx = canvas1.getContext('2d');
+        
+		ctx.drawImage($('#background')[0], 0, 0);
+        
+		ctx.drawImage($('#qr')[0], 65, 265);
+        
+		ctx.fillStyle = "#5F5D5D";
+        
+		ctx.font = "normal 25px '思源黑体 CN'";
+		ctx.fillText('主要性能技术参数：', 65, 245);
+		ctx.fillText('电脑资料号：' + $('#name4').val(), 455, 155);
+		ctx.fillText('生产厂家：' + $('#name5').val(), 455, 200);
+		ctx.fillText('使用日期：' + $('#name6').val(), 455, 250);
+		ctx.fillText('巡检部门：' + $('#name7').val(), 455, 300);
+		ctx.fillText('巡检负责人：' + $('#name8').val(), 455, 350);
+		ctx.fillText('保养责任人：' + $('#name10').val(), 455, 435);
+        
+		ctx.font = "normal " + $('#size1').val() + "px '思源黑体 CN'";
+		ctx.fillText('设备名称：' + $('#name1').val(), 65, 155);
+		ctx.font = "normal " + $('#size2').val() + "px '思源黑体 CN'";
+		ctx.fillText('规格型号：' + $('#name2').val(), 65, 200);
+		ctx.font = "normal " + $('#size3').val() + "px '思源黑体 CN'";
+		ctx.fillText('保养部门：' + $('#name9').val(), 455, 390);
+        
+		$('#result').attr('src', canvas1.toDataURL('image/png'));
+	}
+    // setTimeout('ok();',1000);
+</script>
+</body>
+</html>
