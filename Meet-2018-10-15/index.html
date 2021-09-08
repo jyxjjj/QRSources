@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="author" content="神林">
+    <meta name="generator" content="JetBrains PhpStorm">
+    <meta name="copyright" content="Copyright='DESMG(www.desmg.com) All Rigths Reserved.'; QQ=773933146; Telegram=jyxjjj(https://t.me/jyxjjj); Producer=DESMG">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Mua~</title>
+    <link href="https://www.desmg.com/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" rev="stylesheet">
+    <style>
+        .lockscreen {
+            background-color: #363F48;
+            color: #FFFFFF;
+            font-size: 2rem;
+            font-weight: 500;
+        }
+
+        .lockscreen-wrapper {
+            max-width: 400px;
+            margin: 15% auto 0 auto;
+            text-align: center;
+        }
+
+        a:link, a:hover, a:focus, a:active, a:visited {
+            color: #EEEEEE;
+            text-decoration: none;
+        }
+
+        .lockscreen-footer {
+            margin: 10% 0 0 0;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        thead > tr > td {
+            font-size: 1rem;
+            font-weight: 100;
+        }
+
+        table, thead, tbody, tr, td {
+            border: 0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="lockscreen">
+<div class="lockscreen-wrapper">
+    <table>
+        <thead>
+        <tr>
+            <td>Day</td>
+            <td></td>
+            <td>Hour</td>
+            <td></td>
+            <td>Min</td>
+            <td></td>
+            <td>Sec</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td id="met_day"></td>
+            <td>.</td>
+            <td id="met_hour"></td>
+            <td>:</td>
+            <td id="met_minute"></td>
+            <td>:</td>
+            <td id="met_second"></td>
+        </tr>
+        <tr>
+            <td id="birth_day"></td>
+            <td>.</td>
+            <td id="birth_hour"></td>
+            <td>:</td>
+            <td id="birth_minute"></td>
+            <td>:</td>
+            <td id="birth_second"></td>
+        </tr>
+        <tr>
+            <td id="birth_day2"></td>
+            <td>.</td>
+            <td id="birth_hour2"></td>
+            <td>:</td>
+            <td id="birth_minute2"></td>
+            <td>:</td>
+            <td id="birth_second2"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+
+    </div>
+    <div class="lockscreen-footer">
+        Copyright &copy; 2019
+        <br/>
+        <b><a href="https://www.desmg.com">DESMG</a></b> All rights reserved.
+    </div>
+</div>
+<script src="https://www.desmg.com/resources/jquery/js/jquery.min.js"></script>
+<script src="https://www.desmg.com/resources/desmg/js/countdown.js"></script>
+<script>
+    let thedate = new Date();
+    let year1, year2, month1, month2, date1, date2, hour1, hour2;
+    
+    year1 = thedate.getFullYear();
+    year2 = thedate.getFullYear();
+    month1 = thedate.getMonth() + 1;
+    month2 = thedate.getMonth() + 1;
+    date1 = thedate.getDate();
+    date2 = thedate.getDate();
+    hour1 = thedate.getHours();
+    hour2 = thedate.getHours();
+    
+    if(month1 > 10){year1++;}else if(month1 == 10){
+        if(date1 > 15){year1++;}else if(date1 == 15){
+            if(hour1 >= 18){
+                year1++;
+            }
+        }
+    }
+    if(month2 > 12){year2++;}else if(month2 == 12){
+        if(date2 > 19){year2++;}else if(date2 == 19){
+            if(hour2 >= 11){
+                year2++;
+            }
+        }
+    }
+    
+    year1 = year1.toString() + "-10-15 18:00:00";
+    year2 = year2.toString() + "-12-19 11:00:00";
+    
+    $.desmg.countdown.initDoms($('#met_day'), $('#met_hour'), $('#met_minute'), $('#met_second'), "2018-10-05 12:39:59", false);
+    $.desmg.countdown.initDoms($('#birth_day'), $('#birth_hour'), $('#birth_minute'), $('#birth_second'), year1, true);
+    $.desmg.countdown.initDoms($('#birth_day2'), $('#birth_hour2'), $('#birth_minute2'), $('#birth_second2'), year2, true);
+</script>
+</body>
+</html>
