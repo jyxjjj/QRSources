@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta name="author" content="神林">
     <meta name="generator" content="JetBrains PhpStorm">
@@ -75,11 +75,26 @@
             <td>:</td>
             <td id="met_second"></td>
         </tr>
+        <tr>
+            <td id="bir_day"></td>
+            <td>.</td>
+            <td id="bir_hour"></td>
+            <td>:</td>
+            <td id="bir_minute"></td>
+            <td>:</td>
+            <td id="bir_second"></td>
+        </tr>
+        <tr>
+            <td id="mybir_day"></td>
+            <td>.</td>
+            <td id="mybir_hour"></td>
+            <td>:</td>
+            <td id="mybir_minute"></td>
+            <td>:</td>
+            <td id="mybir_second"></td>
+        </tr>
         </tbody>
     </table>
-    <div class="text-center">
-
-    </div>
     <div class="lockscreen-footer">
         Copyright &copy; 2023
         <br/>
@@ -87,10 +102,17 @@
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://unpkg.com/js-calendar-converter@0.0.6/dist/js-calendar-converter.js"></script>
 <script src="https://www.desmg.com/resources/desmg/js/countdown.js"></script>
 <script>
     let thedate = new Date();
     $.desmg.countdown.initDoms($('#met_day'), $('#met_hour'), $('#met_minute'), $('#met_second'), "2023-08-13 14:17:00", false);
+    let birObj = calendar.lunar2solar(thedate.getFullYear(), '08', '06');
+    birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
+    birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
+    let str = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 00:00:00`;
+    $.desmg.countdown.initDoms($('#bir_day'), $('#bir_hour'), $('#bir_minute'), $('#bir_second'), str, true);
+    $.desmg.countdown.initDoms($('#mybir_day'), $('#mybir_hour'), $('#mybir_minute'), $('#mybir_second'), thedate.getFullYear() + "-08-13 14:17:00", true);
 </script>
 </body>
 </html>
