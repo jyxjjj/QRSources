@@ -122,13 +122,13 @@
     let mybir = thedate.getFullYear() + "-12-19 11:00:00";
     let birStatus = detectIfOlder(thedate, bir);
     let mybirStatus = detectIfOlder(thedate, mybir);
-    if (birStatus >= 0) {
+    if (birStatus <= 0) {
         birObj = calendar.lunar2solar(thedate.getFullYear() + 1, '08', '06');
         birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
         birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
         bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 00:00:00`;
     }
-    if (mybirStatus >= 0) {
+    if (mybirStatus <= 0) {
         mybir = (thedate.getFullYear() + 1) + "-12-19 11:00:00";
     }
     $.desmg.countdown.initDoms($('#met_day'), $('#met_hour'), $('#met_minute'), $('#met_second'), "2023-08-13 14:17:00", false);
