@@ -128,8 +128,8 @@
     let birObj = calendar.lunar2solar(thedate.getFullYear(), '08', '06');
     birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
     birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
-    let bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 00:00:00`;
-    let mybir = thedate.getFullYear() + "-12-19 11:00:00";
+    let bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
+    let mybir = thedate.getFullYear() + "-12-19 10:30:00";
     let marry = thedate.getFullYear() + "-00-00 00:00:00";
     let birStatus = detectIfOlder(thedate, bir);
     let mybirStatus = detectIfOlder(thedate, mybir);
@@ -137,10 +137,10 @@
         birObj = calendar.lunar2solar(thedate.getFullYear() + 1, '08', '06');
         birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
         birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
-        bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 00:00:00`;
+        bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
     }
     if (mybirStatus <= 0) {
-        mybir = (thedate.getFullYear() + 1) + "-12-19 11:00:00";
+        mybir = (thedate.getFullYear() + 1) + "-12-19 10:30:00";
     }
     if (marry <= 0) {
         marryYear = (thedate.getFullYear() + 1) + "-00-00 00:00:00";
