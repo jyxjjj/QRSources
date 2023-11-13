@@ -1,0 +1,109 @@
+<html lang="zh" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" Content="zh-CN">
+    <meta name="author" content="神林">
+    <meta name="copyright" content="Copyright='DESMG(www.desmg.com) All Rigths Reserved.'; QQ=773933146; Telegram=jyxjjj(https://t.me/jyxjjj); Producer=DESMG">
+    <meta name="generator" content="JetBrains PhpStorm">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#212529">
+    <title>Timeline</title>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+    <style>
+        * {
+            font-family: "JetBrains Mono", monospace;
+            font-feature-settings: "liga" on, "calt" on !important;
+            -webkit-font-smoothing: antialiased !important;
+            text-rendering: optimizeLegibility !important;
+        }
+
+        html, body {
+            margin: 0 auto 0 auto;
+        }
+
+        .container {
+            margin-top: 1rem;
+        }
+
+        .timeline {
+            position: relative;
+        }
+
+        .timeline::before {
+            content: "";
+            border-radius: 1rem;
+            background-color: #6C757D;
+            width: .5rem;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 100px;
+            z-index: -9999;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin: 2rem 0;
+        }
+
+        .timeline-label {
+            border-radius: 1rem;
+            padding: 1rem;
+            display: block;
+            text-align: center;
+            vertical-align: middle;
+            background-color: #495057;
+        }
+
+        .timeline-body {
+            border-radius: 1rem;
+            margin-left: 2rem;
+            padding: 1rem;
+            vertical-align: middle;
+            background-color: #343A40;
+            color: #FFFFFF;
+        }
+
+    </style>
+</head>
+<body>
+<div class="timeline">
+    <div class="timeline-item">
+        <span class="timeline-label">2024-04-20 10:00:00</span>
+        <div class="timeline-body">婚礼</div>
+    </div>
+    <div class="timeline-item">
+        <span class="timeline-label">2023-12-31 00:00:00</span>
+        <div class="timeline-body">北京环球影城</div>
+    </div>
+    <div class="timeline-item">
+        <span class="timeline-label">2023-12-12 12:00:00</span>
+        <div class="timeline-body">领证</div>
+    </div>
+    <div class="timeline-item">
+        <span class="timeline-label">2023-12-10 12:00:00</span>
+        <div class="timeline-body">订婚</div>
+    </div>
+    <div class="timeline-item">
+        <span class="timeline-label">2023-11-19 09:00:00</span>
+        <div class="timeline-body">婚纱照</div>
+    </div>
+    <div class="timeline-item">
+        <span class="timeline-label">2023-11-11 13:00:00</span>
+        <div class="timeline-body">结婚登记照</div>
+    </div>
+    <div class="timeline-item">
+        <span class="timeline-label">2023-09-20 13:08:00</span>
+        <div class="timeline-body">你的生日</div>
+    </div>
+    <div class="timeline-item">
+        <span class="timeline-label">2023-08-13 14:17:00</span>
+        <div class="timeline-body">我们第一次见面</div>
+    </div>
+</div>
+<script src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>
