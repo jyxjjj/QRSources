@@ -47,6 +47,26 @@
             text-align: center;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/js-calendar-converter@0.0.6/dist/js-calendar-converter.js"></script>
+    <script src="https://www.desmg.com/resources/desmg/js/countdown.js"></script>
+    <script>
+        function detectIfOlder(currentDate, inputDateTimeString) {
+            const inputDateParts = inputDateTimeString.split(/[- :]/);
+            const inputDate = new Date(
+                parseInt(inputDateParts[0]),  // 年
+                parseInt(inputDateParts[1]) - 1,  // 月
+                parseInt(inputDateParts[2]),  // 日
+                parseInt(inputDateParts[3]),  // 时
+                parseInt(inputDateParts[4]),  // 分
+                parseInt(inputDateParts[5])   // 秒
+            );
+            return inputDate > currentDate ? 1 : inputDate < currentDate ? -1 : 0;
+        }
+    </script>
+    <script>
+        let thedate = new Date();
+    </script>
 </head>
 <body class="lockscreen">
 <div class="lockscreen-wrapper">
@@ -76,6 +96,9 @@
             <td>:</td>
             <td id="met_second"></td>
         </tr>
+        <script>
+            $.desmg.countdown.initDoms($('#met_day'), $('#met_hour'), $('#met_minute'), $('#met_second'), '2023-08-13 14:17:00', false);
+        </script>
         <tr>
             <td style="font-size: small;">Yours</td>
             <td>&nbsp;</td>
@@ -87,6 +110,20 @@
             <td>:</td>
             <td id="bir_second"></td>
         </tr>
+        <script>
+            let birObj = calendar.lunar2solar(thedate.getFullYear(), '08', '06');
+            birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
+            birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
+            let bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
+            let birStatus = detectIfOlder(thedate, bir);
+            if (birStatus <= 0) {
+                birObj = calendar.lunar2solar(thedate.getFullYear() + 1, '08', '06');
+                birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
+                birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
+                bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
+            }
+            $.desmg.countdown.initDoms($('#bir_day'), $('#bir_hour'), $('#bir_minute'), $('#bir_second'), bir, true);
+        </script>
         <tr>
             <td style="font-size: small;">Mine</td>
             <td>&nbsp;</td>
@@ -98,6 +135,14 @@
             <td>:</td>
             <td id="mybir_second"></td>
         </tr>
+        <script>
+            let mybir = thedate.getFullYear() + '-12-19 10:30:00';
+            let mybirStatus = detectIfOlder(thedate, mybir);
+            if (mybirStatus <= 0) {
+                mybir = (thedate.getFullYear() + 1) + '-12-19 10:30:00';
+            }
+            $.desmg.countdown.initDoms($('#mybir_day'), $('#mybir_hour'), $('#mybir_minute'), $('#mybir_second'), mybir, true);
+        </script>
         <tr>
             <td style="font-size: small;">Photo</td>
             <td>&nbsp;</td>
@@ -109,6 +154,14 @@
             <td>:</td>
             <td id="photo_second"></td>
         </tr>
+        <script>
+            let photo = thedate.getFullYear() + '-11-19 10:00:00';
+            let photoStatus = detectIfOlder(thedate, photo);
+            if (photoStatus <= 0) {
+                photo = (thedate.getFullYear() + 1) + '-11-19 10:00:00';
+            }
+            $.desmg.countdown.initDoms($('#photo_day'), $('#photo_hour'), $('#photo_minute'), $('#photo_second'), photo, true);
+        </script>
         <tr>
             <td style="font-size: small;">Marry</td>
             <td>&nbsp;</td>
@@ -120,6 +173,14 @@
             <td>:</td>
             <td id="marry_second"></td>
         </tr>
+        <script>
+            let marry = thedate.getFullYear() + '-12-12 12:00:00';
+            let marryStatus = detectIfOlder(thedate, marry);
+            if (marryStatus <= 0) {
+                marry = (thedate.getFullYear() + 1) + '-12-12 12:00:00';
+            }
+            $.desmg.countdown.initDoms($('#marry_day'), $('#marry_hour'), $('#marry_minute'), $('#marry_second'), marry, true);
+        </script>
         <tr>
             <td style="font-size: small;">Wedding</td>
             <td>&nbsp;</td>
@@ -131,6 +192,14 @@
             <td>:</td>
             <td id="wedding_second"></td>
         </tr>
+        <script>
+            let wedding = thedate.getFullYear() + '-04-20 10:00:00';
+            let weddingStatus = detectIfOlder(thedate, wedding);
+            if (weddingStatus <= 0) {
+                wedding = (thedate.getFullYear() + 1) + '-04-20 10:00:00';
+            }
+            $.desmg.countdown.initDoms($('#wedding_day'), $('#wedding_hour'), $('#wedding_minute'), $('#wedding_second'), wedding, true);
+        </script>
         </tbody>
     </table>
     <div class="lockscreen-footer">
@@ -139,61 +208,5 @@
         <b><a href="https://www.desmg.com">DESMG</a></b> All rights reserved.
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://unpkg.com/js-calendar-converter@0.0.6/dist/js-calendar-converter.js"></script>
-<script src="https://www.desmg.com/resources/desmg/js/countdown.js"></script>
-<script>
-    function detectIfOlder(currentDate, inputDateTimeString) {
-        const inputDateParts = inputDateTimeString.split(/[- :]/);
-        const inputDate = new Date(
-            parseInt(inputDateParts[0]),  // 年
-            parseInt(inputDateParts[1]) - 1,  // 月
-            parseInt(inputDateParts[2]),  // 日
-            parseInt(inputDateParts[3]),  // 时
-            parseInt(inputDateParts[4]),  // 分
-            parseInt(inputDateParts[5])   // 秒
-        );
-        return inputDate > currentDate ? 1 : inputDate < currentDate ? -1 : 0;
-    }
-
-    let thedate = new Date();
-    let birObj = calendar.lunar2solar(thedate.getFullYear(), '08', '06');
-    birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
-    birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
-    let bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
-    let mybir = thedate.getFullYear() + '-12-19 10:30:00';
-    let marry = thedate.getFullYear() + '-12-12 12:00:00';
-    let photo = thedate.getFullYear() + '-11-19 10:00:00';
-    let wedding = thedate.getFullYear() + '-04-20 10:00:00';
-    let birStatus = detectIfOlder(thedate, bir);
-    let mybirStatus = detectIfOlder(thedate, mybir);
-    let photoStatus = detectIfOlder(thedate, photo);
-    let marryStatus = detectIfOlder(thedate, marry);
-    let weddingStatus = detectIfOlder(thedate, wedding);
-    if (birStatus <= 0) {
-        birObj = calendar.lunar2solar(thedate.getFullYear() + 1, '08', '06');
-        birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
-        birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
-        bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
-    }
-    if (mybirStatus <= 0) {
-        mybir = (thedate.getFullYear() + 1) + '-12-19 10:30:00';
-    }
-    if (photoStatus <= 0) {
-        photo = (thedate.getFullYear() + 1) + '-11-19 10:00:00';
-    }
-    if (marryStatus <= 0) {
-        marry = (thedate.getFullYear() + 1) + '-12-12 12:00:00';
-    }
-    if (weddingStatus <= 0) {
-        wedding = (thedate.getFullYear() + 1) + '-04-20 10:00:00';
-    }
-    $.desmg.countdown.initDoms($('#met_day'), $('#met_hour'), $('#met_minute'), $('#met_second'), '2023-08-13 14:17:00', false);
-    $.desmg.countdown.initDoms($('#bir_day'), $('#bir_hour'), $('#bir_minute'), $('#bir_second'), bir, true);
-    $.desmg.countdown.initDoms($('#mybir_day'), $('#mybir_hour'), $('#mybir_minute'), $('#mybir_second'), mybir, true);
-    $.desmg.countdown.initDoms($('#photo_day'), $('#photo_hour'), $('#photo_minute'), $('#photo_second'), photo, true);
-    $.desmg.countdown.initDoms($('#marry_day'), $('#marry_hour'), $('#marry_minute'), $('#marry_second'), marry, true);
-    $.desmg.countdown.initDoms($('#wedding_day'), $('#wedding_hour'), $('#wedding_minute'), $('#wedding_second'), wedding, true);
-</script>
 </body>
 </html>
