@@ -161,10 +161,10 @@
     birObj.cMonth = birObj.cMonth < 10 ? '0' + birObj.cMonth : birObj.cMonth;
     birObj.cDay = birObj.cDay < 10 ? '0' + birObj.cDay : birObj.cDay;
     let bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
-    let mybir = thedate.getFullYear() + "-12-19 10:30:00";
-    let marry = thedate.getFullYear() + "-12-12 12:00:00";
-    let photo = thedate.getFullYear() + "-11-19 10:00:00";
-    let wedding = thedate.getFullYear() + "-04-20 10:00:00";
+    let mybir = thedate.getFullYear() + '-12-19 10:30:00';
+    let marry = thedate.getFullYear() + '-12-12 12:00:00';
+    let photo = thedate.getFullYear() + '-11-19 10:00:00';
+    let wedding = thedate.getFullYear() + '-04-20 10:00:00';
     let birStatus = detectIfOlder(thedate, bir);
     let mybirStatus = detectIfOlder(thedate, mybir);
     let photoStatus = detectIfOlder(thedate, photo);
@@ -177,18 +177,18 @@
         bir = `${birObj.cYear}-${birObj.cMonth}-${birObj.cDay} 13:08:00`;
     }
     if (mybirStatus <= 0) {
-        mybir = (thedate.getFullYear() + 1) + "-12-19 10:30:00";
+        mybir = (thedate.getFullYear() + 1) + '-12-19 10:30:00';
     }
     if (photoStatus <= 0) {
-        photo = (thedate.getFullYear() + 1) + "-11-19 10:00:00";
+        photo = (thedate.getFullYear() + 1) + '-11-19 10:00:00';
     }
     if (marryStatus <= 0) {
-        marry = (thedate.getFullYear() + 1) + "-12-12 12:00:00";
+        marry = (thedate.getFullYear() + 1) + '-12-12 12:00:00';
     }
     if (weddingStatus <= 0) {
-        wedding = (thedate.getFullYear() + 1) + "-04-20 10:00:00";
+        wedding = (thedate.getFullYear() + 1) + '-04-20 10:00:00';
     }
-    $.desmg.countdown.initDoms($('#met_day'), $('#met_hour'), $('#met_minute'), $('#met_second'), "2023-08-13 14:17:00", false);
+    $.desmg.countdown.initDoms($('#met_day'), $('#met_hour'), $('#met_minute'), $('#met_second'), '2023-08-13 14:17:00', false);
     $.desmg.countdown.initDoms($('#bir_day'), $('#bir_hour'), $('#bir_minute'), $('#bir_second'), bir, true);
     $.desmg.countdown.initDoms($('#mybir_day'), $('#mybir_hour'), $('#mybir_minute'), $('#mybir_second'), mybir, true);
     $.desmg.countdown.initDoms($('#photo_day'), $('#photo_hour'), $('#photo_minute'), $('#photo_second'), photo, true);
