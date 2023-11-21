@@ -257,6 +257,7 @@
 <!--suppress JSJQueryEfficiency -->
 <script>
     $(document).ready(_ => {
+            $(".mac-window").css("left", ($(window).width() - $(".mac-window").width()) / 2);
             $(".mac-window").draggable({
                 handle: ".mac-window-header",
                 containment: ".window-container",
