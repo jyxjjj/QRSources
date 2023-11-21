@@ -155,10 +155,10 @@
             <td id="photo_second"></td>
         </tr>
         <script>
-            let photo = thedate.getFullYear() + '-11-19 10:00:00';
+            let photo = thedate.getFullYear() + '-11-19 08:00:00';
             let photoStatus = detectIfOlder(thedate, photo);
             if (photoStatus <= 0) {
-                photo = (thedate.getFullYear() + 1) + '-11-19 10:00:00';
+                photo = (thedate.getFullYear() + 1) + '-11-19 08:00:00';
             }
             $.desmg.countdown.initDoms($('#photo_day'), $('#photo_hour'), $('#photo_minute'), $('#photo_second'), photo, true);
         </script>
@@ -174,10 +174,10 @@
             <td id="marry_second"></td>
         </tr>
         <script>
-            let marry = thedate.getFullYear() + '-12-12 12:00:00';
+            let marry = thedate.getFullYear() + '-12-12 13:30:00';
             let marryStatus = detectIfOlder(thedate, marry);
             if (marryStatus <= 0) {
-                marry = (thedate.getFullYear() + 1) + '-12-12 12:00:00';
+                marry = (thedate.getFullYear() + 1) + '-12-12 13:30:00';
             }
             $.desmg.countdown.initDoms($('#marry_day'), $('#marry_hour'), $('#marry_minute'), $('#marry_second'), marry, true);
         </script>
