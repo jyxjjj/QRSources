@@ -62,9 +62,6 @@
             position: fixed;
             top: 0;
             left: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .mac-window {
@@ -81,7 +78,8 @@
 
         .mac-window.maximized {
             width: 100%;
-            height: 100%;
+            height: calc(100% - 6rem);
+            max-height: calc(100% - 6rem);
         }
 
         .mac-window-header {
@@ -126,17 +124,17 @@
             position: relative;
         }
 
-        .mac-window-button.close:hover::before {
+        .mac-window-buttons:hover > .mac-window-button.close::before {
             content: '✖️';
             top: 1px;
             left: -1px;
         }
 
-        .mac-window-button.min:hover::before {
+        .mac-window-buttons:hover > .mac-window-button.min::before {
             content: '➖';
         }
 
-        .mac-window-button.max:hover::before {
+        .mac-window-buttons:hover > .mac-window-button.max::before {
             content: '➕';
         }
 
@@ -268,8 +266,11 @@
                     }
                 },
                 stop: _ => {
-                    if ($(".mac-window").css("top").replace("px","") < 0) {
+                    if ($(".mac-window").css("top").replace("px", "") < 0) {
                         $(".mac-window").css("top", 0);
+                    }
+                    if ($(".mac-window").css("left").replace("px", "") < 0) {
+                        $(".mac-window").css("left", 0);
                     }
                 }
             });
@@ -281,7 +282,13 @@
                 $(".mac-window").hide();
             });
             $(".mac-window-button.max").on("click", _ => {
-                $(".mac-window").hasClass("maximized") ? $(".mac-window").removeClass("maximized") : $(".mac-window").addClass("maximized");
+                if ($(".mac-window").hasClass("maximized")) {
+                    $(".mac-window").removeClass("maximized")
+                } else {
+                    $(".mac-window").addClass("maximized");
+                    $(".mac-window").css("top", 0);
+                    $(".mac-window").css("left", 0);
+                }
             });
             $(".App-Finder").on("click", _ => {
                 $(".mac-window").show();
