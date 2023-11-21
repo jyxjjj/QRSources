@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Language" Content="zh-CN">
+    <meta name="author" content="神林">
+    <meta name="copyright" content="Copyright='DESMG(www.desmg.com) All Rigths Reserved.'; QQ=773933146; Telegram=jyxjjj(https://t.me/jyxjjj); Producer=DESMG">
+    <meta name="generator" content="JetBrains PhpStorm">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#212A37">
+    <title>Mac Window</title>
+    <!-- Google Fonts -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <!-- Google Fonts -->
+    <!-- unpkg -->
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <!-- unpkg -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- Bootstrap -->
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap" crossorigin="anonymous" referrerpolicy="no-referrer" -->
+    <!-- link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Emoji:wght@300..700&display=swap" crossorigin="anonymous" referrerpolicy="no-referrer" -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons:wght@400&display=swap" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- Google Fonts -->
+    <!-- Extra Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons@1.11.1/font/bootstrap-icons.min.css">
+    <!-- Extra Icons -->
+    <style>
+        * {
+            /*font-family: "JetBrains Mono", "Noto Sans SC", monospace;*/
+            font-family: "JetBrains Mono", monospace;
+            font-feature-settings: "liga" on, "calt" on !important;
+            -webkit-font-smoothing: antialiased !important;
+            text-rendering: optimizeLegibility !important;
+        }
+
+        body {
+            margin: 0 auto 0 auto;
+            width: 100%;
+            height: 100%;
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        a:link, a:hover, a:focus, a:active, a:visited {
+            color: #DDDDDD;
+            text-decoration: none;
+        }
+
+        .window-container {
+            width: 100%;
+            min-height: calc(100% - 6rem);
+            height: calc(100% - 6rem);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mac-window {
+            width: 640px;
+            height: 480px;
+            box-shadow: 0 1rem 2rem #333333;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .mac-window.maximized {
+            width: 100%;
+            height: 100%;
+        }
+
+        .mac-window-header {
+            background-color: #212A37;
+            color: #9B9FA5;
+            padding: 1rem;
+            text-align: center;
+            line-height: 1rem;
+        }
+
+        .mac-window-buttons {
+            display: flex;
+            position: absolute;
+        }
+
+        .mac-window-button {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            margin: 0 .25rem;
+        }
+
+        .mac-window-button.close {
+            background-color: #FC615D;
+        }
+
+        .mac-window-button.min {
+            background-color: #FEB946;
+        }
+
+        .mac-window-button.max {
+            background-color: #2DC247;
+        }
+
+        .mac-window-button.close::before, .mac-window-button.min::before, .mac-window-button.max::before {
+            color: #400A0A;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            vertical-align: middle;
+            font-size: .5rem;
+            position: relative;
+        }
+
+        .mac-window-button.close:hover::before {
+            content: '✖️';
+            top: 1px;
+            left: -1px;
+        }
+
+        .mac-window-button.min:hover::before {
+            content: '➖';
+        }
+
+        .mac-window-button.max:hover::before {
+            content: '➕';
+        }
+
+        .mac-window-content {
+            background-color: #191F27;
+            color: #FEFEFE;
+            padding: 1rem;
+            width: 100%;
+            height: 100%;
+        }
+
+        .dock {
+            background-color: #2C3E50B3;
+            backdrop-filter: blur(1rem);
+            display: flex;
+            padding: .25rem;
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 1rem;
+        }
+
+        .dock-item {
+            margin: 0 .1rem;
+            width: 4rem;
+            height: 4rem;
+            font-size: 4rem;
+            color: #ECF0F1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .dock-item.active::after {
+            content: '';
+            width: 0.25rem;
+            height: 0.25rem;
+            border-radius: 16rem;
+            background-color: #ECF0F1;
+            position: fixed;
+            bottom: 1px;
+            opacity: .5;
+        }
+
+        .App-Finder {
+            background-image: url('Finder.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .App-Launchpad {
+            background-image: url('Launchpad.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .App-SystemPreferences {
+            background-image: url('SystemPreferences.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .App-Trash.empty {
+            background-image: url('Trash-Empty.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .App-Trash.full {
+            background-image: url('Trash-Full.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .App-Trash.empty::before, .App-Trash.full::before {
+            content: '';
+            width: .125rem;
+            height: 3.5rem;
+            background-color: #ECF0F1;
+            position: relative;
+            left: -2rem;
+            opacity: .5;
+            margin: 0 .1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="window-container">
+    <div class="mac-window">
+        <div class="mac-window-header">
+            <div class="mac-window-buttons">
+                <div class="mac-window-button close"></div>
+                <div class="mac-window-button min"></div>
+                <div class="mac-window-button max"></div>
+            </div>
+            <div class="mac-window-title">Title</div>
+        </div>
+        <div class="mac-window-content">
+            <p>This is the content of the window.</p>
+        </div>
+    </div>
+</div>
+<div class="dock">
+    <a href="#" class="dock-item App-Finder active"></a>
+    <a href="#" class="dock-item App-Launchpad"></a>
+    <a href="#" class="dock-item App-SystemPreferences"></a>
+    <a href="#" class="dock-item App-Trash empty"></a>
+</div>
+<script src="https://unpkg.com/jquery@3.7.1/dist/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/jquery-ui@1.13.2/dist/jquery-ui.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--suppress JSJQueryEfficiency -->
+<script>
+    $(document).ready(_ => {
+            $(".mac-window").draggable({
+                handle: ".mac-window-header",
+                containment: ".window-container",
+                start: _ => {
+                    if ($(".mac-window").hasClass("maximized")) {
+                        $(".mac-window").removeClass("maximized");
+                    }
+                },
+                stop: _ => {
+                    if ($(".mac-window").css("top").replace("px","") < 0) {
+                        $(".mac-window").css("top", 0);
+                    }
+                }
+            });
+            $(".mac-window-button.close").on("click", _ => {
+                $(".mac-window").hide();
+                $(".App-Finder").removeClass("active");
+            });
+            $(".mac-window-button.min").on("click", _ => {
+                $(".mac-window").hide();
+            });
+            $(".mac-window-button.max").on("click", _ => {
+                $(".mac-window").hasClass("maximized") ? $(".mac-window").removeClass("maximized") : $(".mac-window").addClass("maximized");
+            });
+            $(".App-Finder").on("click", _ => {
+                $(".mac-window").show();
+                $(".App-Finder").addClass("active");
+            });
+            $(".App-Trash").on("click", _ => {
+                if ($(".App-Trash").hasClass("empty")) {
+                    $(".App-Trash").removeClass("empty");
+                    $(".App-Trash").addClass("full");
+                } else {
+                    $(".App-Trash").removeClass("full");
+                    $(".App-Trash").addClass("empty");
+                }
+            });
+        }
+    );
+</script>
+</body>
+</html>
